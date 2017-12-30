@@ -5,13 +5,8 @@ from sklearn.neural_network import MLPRegressor
 from mysql_fetcher import MySqlFetcher
 
 ms = MySqlFetcher()
-ms.run_select_query("""SELECT
-                           age, psa_level0, pros_gleason, dth_cat
-                           FROM
-                           prostate_screening.prostate_overall
-                           WHERE
-                           is_dead = 1.0 AND f_cancersite = 1.0 AND dth_cat=1.0
-                           AND (psa_level0!=0.0) AND (psa_level0<=35.0) AND (pros_gleason NOT IN (0.0, 99.0))""")
+
+ms.run_select_query_from_file("queries/select_to_predict_illness_probability.sql")
 
 ms.print_data_set_stats()
 # train_data_set.hist()

@@ -1,17 +1,13 @@
-import json
 from sklearn import model_selection
+from sklearn.externals import joblib
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.neural_network import MLPRegressor
-from sklearn.externals import joblib
 
 from mysql_fetcher import MySqlFetcher
 
 ms = MySqlFetcher()
-ms.run_select_query("""SELECT
-                           dx_psa,pros_gleason,dth_days
-                           FROM
-                           prostate_screening.prostate_overall
-                           WHERE dx_psa>0.0 AND dx_psa<40.0 AND is_dead = 1.0 AND (pros_gleason NOT IN (0.0, 99.0))""")
+
+ms.run_select_query_from_file("queries/select_to_predict_mortality.sql")
 
 ms.print_data_set_stats()
 # train_data_set.hist()

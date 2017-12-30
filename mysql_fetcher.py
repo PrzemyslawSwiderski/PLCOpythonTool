@@ -1,14 +1,17 @@
-import pymysql
 import pandas
-from sklearn.preprocessing import MinMaxScaler, StandardScaler
+import pymysql
+from sklearn.preprocessing import MinMaxScaler
+
+from query_loader import QueryLoader
 
 
 class MySqlFetcher:
-    def __init__(self, scaler=MinMaxScaler()):
+    def __init__(self, scaler=MinMaxScaler(), query_loader=QueryLoader()):
         self.db_connection = self.open_connection()
         self.data_set = pandas.DataFrame()
         self.data_set_normalized = pandas.DataFrame()
         self.scaler = scaler
+        self.query_loader = query_loader
 
     def open_connection(self):
         return pymysql.connect(host='localhost',
@@ -48,3 +51,7 @@ class MySqlFetcher:
 
     def get_Y(self):
         return self.data_set.values[:, -1]
+
+    def run_select_query_from_file(self, file_name):
+        query = self.query_loader.load_query(file_name)
+        self.run_select_query(query)
