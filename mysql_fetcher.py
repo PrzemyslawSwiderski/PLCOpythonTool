@@ -1,13 +1,12 @@
 import pandas
 import pymysql
 from sklearn.preprocessing import MinMaxScaler
-
 from query_loader import QueryLoader
 
 
 class MySqlFetcher:
     def __init__(self, scaler=MinMaxScaler(), query_loader=QueryLoader()):
-        self.db_connection = self.open_connection()
+        self.__db_connection = self.open_connection()
         self.data_set = pandas.DataFrame()
         self.data_set_normalized = pandas.DataFrame()
         self.scaler = scaler
@@ -22,10 +21,10 @@ class MySqlFetcher:
                                cursorclass=pymysql.cursors.DictCursor)
 
     def close_connection(self):
-        self.db_connection.close()
+        self.__db_connection.close()
 
     def run_select_query(self, query, arguments=None):
-        query_result = pandas.read_sql_query(query, self.db_connection, params=arguments)
+        query_result = pandas.read_sql_query(query, self.__db_connection, params=arguments)
         query_result = query_result.apply(pandas.to_numeric)
         self.data_set = query_result
         self.normalize_data_set()
