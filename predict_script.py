@@ -3,23 +3,19 @@ from sklearn import model_selection
 from sklearn.externals import joblib
 from sklearn.model_selection import GridSearchCV
 from sklearn.neural_network import MLPRegressor
+
+from helpers import log_train_results
 from mysql_fetcher import MySqlFetcher
 import logging
 import logging.config
 
 
 def main():
-    date_time_now = datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
-
     logging.config.fileConfig("logging.conf")
 
     ms = MySqlFetcher()
     ms.run_select_query_from_file("queries/select_to_predict_mortality.sql")
-    ms.print_data_set_stats()
-    # train_data_set.hist()
-    # scatter_matrix(train_data_set)
-    # plt.show()
-    ms.print_scaled_data_set_stats()
+    ms.details_printer.print_all()
     X = ms.get_X()
     Y = ms.get_Y()
     validation_size = 0.1
@@ -36,23 +32,14 @@ def main():
         'shuffle': [True, False],
         'activation': ["identity", "tanh"]}, verbose=10, n_jobs=4)
     rs.fit(X_train, Y_train)
-    logging.info("CV results:")
-    logging.info(rs.cv_results_)
-    logging.info("Best estimator:")
-    logging.info(rs.best_estimator_)
-    logging.info("Best params:")
-    logging.info(rs.best_params_)
-    logging.info("Real values:")
-    logging.info(Y_validation)
-    logging.info("Predicted values:")
-    mlp_output_values_scaled = rs.predict(X_validation)
-    logging.info(mlp_output_values_scaled)
+    log_train_results(rs, X_validation, Y_validation)
     training_result = {
         "result_set": rs,
         "input_data_set": ms.data_set,
         "input_data_set_normalized": ms.data_set_normalized,
         "train_test_split": (X_train, X_validation, Y_train, Y_validation)
     }
+    date_time_now = datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
     joblib.dump(training_result, f'pickles/train_result_{date_time_now}.pkl')
     # plt.plot(rs.best_estimator_.loss_curve)
     # plt.title('MLPRegressor in scikit-learn loss curve')

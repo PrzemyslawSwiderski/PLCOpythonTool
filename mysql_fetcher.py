@@ -1,8 +1,8 @@
-import logging
-
 import pandas
 import pymysql
 from sklearn.preprocessing import MinMaxScaler
+
+from details_printer import DefaultDetailsPrinter
 from query_loader import QueryLoader
 
 
@@ -13,7 +13,7 @@ class MySqlFetcher:
         self.data_set_normalized = pandas.DataFrame()
         self.scaler = scaler
         self.query_loader = query_loader
-        self.logger = logging
+        self.details_printer = DefaultDetailsPrinter(self)
 
     def open_connection(self):
         return pymysql.connect(host='localhost',
@@ -32,22 +32,6 @@ class MySqlFetcher:
         self.data_set = query_result
         self.normalize_data_set()
         return self.data_set
-
-    def print_data_set_stats(self):
-        self.logger.info("DataSet:")
-        self.logger.info(self.data_set)
-        self.logger.info("DataSet Shape:")
-        self.logger.info(self.data_set.shape)
-        self.logger.info("DataSet Stats:")
-        self.logger.info(self.data_set.describe(include='all'))
-
-    def print_scaled_data_set_stats(self):
-        self.logger.info("Sample Normalized Train DataSet:")
-        self.logger.info(self.data_set_normalized)
-        self.logger.info("Normalized Train DataSet Shape:")
-        self.logger.info(self.data_set_normalized.shape)
-        self.logger.info("Normalized Train DataSet Stats:")
-        self.logger.info(self.data_set_normalized.describe())
 
     def normalize_data_set(self):
         self.data_set_normalized = pandas.DataFrame(self.scaler.fit_transform(self.data_set.iloc[:, 0:-1]))
