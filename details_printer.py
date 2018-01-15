@@ -9,10 +9,17 @@ class DefaultDetailsPrinter:
         self.logger = logging
 
     def print_data_set_correlation(self):
+        self.logger.info("_________________________")
         self.logger.info("DataSet Correlation:")
         self.logger.info(self.fetcher_object.data_set.corr())
 
+    def print_normalized_data_set_correlation(self):
+        self.logger.info("_________________________")
+        self.logger.info("Normalized DataSet Correlation:")
+        self.logger.info(self.fetcher_object.data_set_normalized.corr())
+
     def print_data_set_stats(self):
+        self.logger.info("_________________________")
         self.logger.info("DataSet:")
         self.logger.info(self.fetcher_object.data_set)
         self.logger.info("DataSet Shape:")
@@ -20,7 +27,8 @@ class DefaultDetailsPrinter:
         self.logger.info("DataSet Stats:")
         self.logger.info(self.fetcher_object.data_set.describe(include='all'))
 
-    def print_scaled_data_set_stats(self):
+    def print_normalized_data_set_stats(self):
+        self.logger.info("_________________________")
         self.logger.info("Sample Normalized Train DataSet:")
         self.logger.info(self.fetcher_object.data_set_normalized)
         self.logger.info("Normalized Train DataSet Shape:")
@@ -29,11 +37,23 @@ class DefaultDetailsPrinter:
         self.logger.info(self.fetcher_object.data_set_normalized.describe())
 
     def print_all(self):
-        self.print_data_set_correlation()
-        self.print_top_correlations()
-        self.print_data_set_stats()
-        self.print_scaled_data_set_stats()
+        self.logger.info("PRENORMALIZED DATASET")
+        self.logger.info("_________________________")
+        self.print_all_data_set()
+        self.logger.info("NORMALIZED DATASET")
+        self.logger.info("_________________________")
+        self.print_all_data_set_normalized()
 
-    def print_top_correlations(self, n=5):
-        print("Top Absolute Correlations")
-        print(get_top_abs_correlations(self.fetcher_object.data_set, n))
+    def print_all_data_set(self):
+        self.print_data_set_correlation()
+        self.print_top_correlations(self.fetcher_object.data_set)
+        self.print_data_set_stats()
+
+    def print_all_data_set_normalized(self):
+        self.print_normalized_data_set_correlation()
+        self.print_normalized_data_set_stats()
+
+    def print_top_correlations(self, data_set, n=20):
+        self.logger.info("_________________________")
+        self.logger.info("Top Absolute Correlations")
+        self.logger.info(get_top_abs_correlations(data_set, n))
