@@ -2,7 +2,7 @@ import glob
 import logging
 import os
 
-from os.path import isfile, join
+import pandas
 
 
 def ensure_dir(dir_name):
@@ -30,25 +30,34 @@ def get_file_names_by_ext(path, extension='pkl'):
     return files_grabbed
 
 
-def log_train_results(rs, X_validation, Y_validation):
+def log_train_results_CV(rs, X_validation, Y_validation):
     logging.info("CV results:")
     logging.info(rs.cv_results_)
     logging.info("Best estimator:")
     logging.info(rs.best_estimator_)
     logging.info("Best params:")
     logging.info(rs.best_params_)
-    logging.info("Real values:")
-    logging.info(Y_validation)
-    logging.info("Predicted values:")
+    logging.info("Real / Predicted values:")
     mlp_output_values_scaled = rs.predict(X_validation)
-    logging.info(mlp_output_values_scaled)
+    logging.info(pandas.DataFrame({'predicted': mlp_output_values_scaled, 'real': Y_validation}))
+
+
+def log_train_results_MLP(rs, X_validation, Y_validation):
+    logging.info("Real / Predicted values:")
+    mlp_output_values_scaled = rs.predict(X_validation)
+    logging.info(
+        pandas.DataFrame({'predicted': mlp_output_values_scaled, 'real': Y_validation}))
+    logging.info("Score:")
+    logging.info(rs.score(X_validation, Y_validation))
+    logging.info("Loss:")
+    logging.info(rs.loss_)
 
 
 def get_redundant_pairs(data_frame):
     pairs_to_drop = set()
     cols = data_frame.columns
     for i in range(0, data_frame.shape[1]):
-        for j in range(0, i+1):
+        for j in range(0, i + 1):
             pairs_to_drop.add((cols[i], cols[j]))
     return pairs_to_drop
 

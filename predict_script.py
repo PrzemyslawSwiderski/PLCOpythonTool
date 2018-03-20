@@ -1,13 +1,15 @@
+import logging
+import logging.config
 from datetime import datetime
+
 from sklearn import model_selection
 from sklearn.externals import joblib
 from sklearn.model_selection import GridSearchCV
 from sklearn.neural_network import MLPRegressor
 
-from helpers import log_train_results
-from mysql_fetcher import MySqlFetcher
-import logging
-import logging.config
+from classes.mysql_fetcher import MySqlFetcher
+from config.config import PICKLES_PATH
+from utils.helpers import log_train_results
 
 
 def main():
@@ -29,7 +31,6 @@ def main():
     rs = GridSearchCV(mlp, param_grid={
         'alpha': [0.1, 1000],
         'hidden_layer_sizes': [(100, 100, 100), (50, 50)],
-        'shuffle': [True, False],
         'activation': ["identity", "tanh"]}, verbose=10, n_jobs=4)
     rs.fit(X_train, Y_train)
     log_train_results(rs, X_validation, Y_validation)
@@ -40,7 +41,7 @@ def main():
         "train_test_split": (X_train, X_validation, Y_train, Y_validation)
     }
     date_time_now = datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
-    joblib.dump(training_result, f'pickles/train_result_{date_time_now}.pkl')
+    joblib.dump(training_result, f'{PICKLES_PATH}/train_result_{date_time_now}.pkl')
     # plt.plot(rs.best_estimator_.loss_curve)
     # plt.title('MLPRegressor in scikit-learn loss curve')
     # plt.show()

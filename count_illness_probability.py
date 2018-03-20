@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 from sklearn import model_selection
 from sklearn.neural_network import MLPRegressor
 
-from mysql_fetcher import MySqlFetcher
+from classes.mysql_fetcher import MySqlFetcher
 
 ms = MySqlFetcher()
 

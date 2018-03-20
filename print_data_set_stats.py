@@ -1,15 +1,22 @@
-import logging
-import logging.config
+import argparse
+import os
 
-from mysql_fetcher import MySqlFetcher
+from sklearn.externals import joblib
+
+from classes.details_printer import ConsoleDataSetDetailsPrinter
+from config.config import LOGS_CATALOG_PATH, PICKLES_PATH
+from config.logger_conf import configure_logging
 
 
 def main():
-    logging.config.fileConfig("logging.conf")
+    parser = argparse.ArgumentParser(description="Script prints data_set stats by loaded pickle")
+    parser.add_argument("p", help="Pickled data_set file to be load instead of query DB")
+    pickled_data_file = parser.parse_args().p
+    configure_logging(os.path.join(LOGS_CATALOG_PATH, "log_file.log"))
 
-    ms = MySqlFetcher()
-    ms.run_select_query_from_file("queries/select_to_predict_mortality_2.sql")
-    ms.details_printer.print_all()
+    data_set = joblib.load(os.path.join(PICKLES_PATH, f"{pickled_data_file}.pkl"))
+    dp = ConsoleDataSetDetailsPrinter(data_set)
+    dp.print_all()
 
 
 if __name__ == "__main__":
