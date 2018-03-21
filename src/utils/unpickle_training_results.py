@@ -1,6 +1,6 @@
 from sklearn.externals import joblib
 
-from utils.helpers import get_file_names_by_ext
+from helpers import get_file_names_by_ext
 
 pickles = get_file_names_by_ext("pickles")
 pickles_sorted = sorted(pickles)

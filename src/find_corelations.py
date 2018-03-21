@@ -3,8 +3,8 @@ import os
 
 from sklearn.externals import joblib
 
-from config.config import LOGS_CATALOG_PATH, PICKLES_PATH, FEATURES_STATS_PATH
-from config.logger_conf import configure_logging
+from common_config.config import LOGS_CATALOG_PATH, PICKLES_PATH, FEATURES_STATS_PATH
+from common_config.logger_conf import configure_logging
 from utils.helpers import get_top_abs_correlations
 
 

@@ -8,7 +8,7 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.neural_network import MLPRegressor
 
 from classes.mysql_fetcher import MySqlFetcher
-from config.config import PICKLES_PATH
+from common_config.config import PICKLES_PATH
 from utils.helpers import log_train_results
 
 

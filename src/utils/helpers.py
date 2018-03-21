@@ -2,7 +2,12 @@ import glob
 import logging
 import os
 
+import numpy
 import pandas
+
+
+def pretty_print_dict(dictionary):
+    return '\n'.join(['%s:: %s' % (key, value) for (key, value) in dictionary.items()])
 
 
 def ensure_dir(dir_name):
@@ -67,3 +72,21 @@ def get_top_abs_correlations(data_frame, n=5):
     labels_to_drop = get_redundant_pairs(data_frame)
     au_corr = au_corr.drop(labels=labels_to_drop).sort_values(ascending=False)
     return au_corr[0:n]
+
+
+def get_correlations_by_feature(data_frame, feature_name):
+    feature_corr = data_frame.corr()[feature_name]
+    feature_corr = feature_corr.drop(labels=feature_name)
+    feature_corr.reindex(feature_corr.abs().sort_values(ascending=False).values)
+    return feature_corr
+
+
+def exclude_boundary_values(data_set, feature_name, scale):
+    return data_set[
+        numpy.abs(data_set[feature_name] - data_set[feature_name].mean()) <= (scale * data_set[feature_name].std())]
+
+
+def refactor_data_set_to_numeric(data_set):
+    data_set = data_set.apply(pandas.to_numeric, errors="coerce")
+    data_set.dropna(axis=1, how="all", inplace=True)
+    return data_set

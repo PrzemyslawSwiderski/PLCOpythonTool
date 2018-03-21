@@ -4,8 +4,8 @@ import os
 from sklearn.externals import joblib
 
 from classes.details_printer import ConsoleDataSetDetailsPrinter
-from config.config import LOGS_CATALOG_PATH, PICKLES_PATH
-from config.logger_conf import configure_logging
+from common_config.config import LOGS_CATALOG_PATH, PICKLES_PATH
+from common_config.logger_conf import configure_logging
 
 
 def main():

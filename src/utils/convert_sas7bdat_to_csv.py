@@ -1,9 +1,9 @@
 #!/usr/bin/python
 
+import os
 import sys
 
-import os
-from sas7bdat import SAS7BDAT
+import SAS7BDAT as SAS7BDAT
 
 
 def main(argv):

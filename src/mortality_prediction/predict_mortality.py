@@ -6,8 +6,8 @@ from sklearn.externals import joblib
 from sklearn.neural_network import MLPRegressor
 from sklearn.preprocessing import MinMaxScaler
 
-from config.config import PICKLES_PATH, LOGS_CATALOG_PATH
-from config.logger_conf import configure_logging
+from common_config.config import PICKLES_PATH, LOGS_CATALOG_PATH
+from common_config.logger_conf import configure_logging
 from utils.helpers import log_train_results_MLP
 
 

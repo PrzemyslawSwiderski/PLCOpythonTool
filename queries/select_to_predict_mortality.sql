@@ -2,19 +2,23 @@ SELECT
   dth_days,
   dx_psa,
   pros_gleason,
-  dcf_unddeath,
-  pros_fh_age,
-  rectal_history,
-  surg_age,
-  cig_years,
-  numbiopp,
-  asppd,
-  ibuppd,
+  pros_exitage,
+  bmi_curc,
   weight_f,
   height_f,
-  bmi_curr,
+--  dcf_unddeath,
+--  pros_fh_age,
+--  rectal_history,
+--  surg_age,
+  cig_years,
+--  numbiopp,
+--  asppd,
+--  ibuppd,
+--  weight_f,
+--  height_f,
+--  bmi_curr,
   age
 FROM
   prostate_screening.prostate_overall
-WHERE dx_psa > 0.0 AND dx_psa < 40.0 AND
+WHERE dx_psa > 0.0 AND
       (pros_gleason NOT IN (0.0, 99.0))
