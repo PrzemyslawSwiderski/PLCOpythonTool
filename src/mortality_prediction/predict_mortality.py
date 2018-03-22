@@ -1,14 +1,15 @@
 import argparse
+import logging
 import os
 
 from sklearn import model_selection
 from sklearn.externals import joblib
+from sklearn.model_selection import GridSearchCV
 from sklearn.neural_network import MLPRegressor
-from sklearn.preprocessing import MinMaxScaler
 
-from common_config.config import PICKLES_PATH, LOGS_CATALOG_PATH
+from common_config.common_config import LOGS_CATALOG_PATH, PICKLES_PATH
 from common_config.logger_conf import configure_logging
-from utils.helpers import log_train_results_MLP
+from utils.helpers import log_train_results_MLPRegressor
 
 
 def main():
@@ -17,30 +18,37 @@ def main():
     parser.add_argument("p", help="Pickled data_set file to be load")
     pickled_data_file = parser.parse_args().p
 
-    data_set = joblib.load(os.path.join(PICKLES_PATH, f"{pickled_data_file}.pkl"))
-    # X = data_set.loc[:,("dx_psa", "pros_gleason", "numbiopp", "age", "bmi_curr", "cig_years", "rectal_history")]
-    X = data_set.loc[:, ("age", "cig_years", "pros_fh_age")]
-    # X["pros_fh_age"].fillna(X["pros_fh_age"].mean(), inplace=True)
-    Y = data_set.loc[:, "dth_days"]
-    X.fillna(X.mean, inplace=True)
-    validation_size = 0.1
-    seed = 7
-    X_train, X_validation, Y_train, Y_validation = model_selection.train_test_split(X, Y, test_size=validation_size,
-                                                                                    random_state=seed)
+    data_set = joblib.load(os.path.join(PICKLES_PATH, f"saved_data_set_{pickled_data_file}.pkl"))
 
-    mlp = MLPRegressor(activation='identity', solver='adam', hidden_layer_sizes=100, verbose=False, random_state=9,
-                       max_iter=2000000,
-                       warm_start=False, shuffle=True, tol=0.00000000001, learning_rate='adaptive',
-                       learning_rate_init=0.001, alpha=100)
-    # rs = GridSearchCV(mlp, param_grid={
-    #     'alpha': [0.1],
-    #     'hidden_layer_sizes': [(50, 50, 50)],
-    #     'activation': ["identity"]}, verbose=10, n_jobs=4)
-    scaler = MinMaxScaler()
-    X_train = scaler.fit_transform(X_train)
-    X_validation = scaler.transform(X_validation)
-    mlp.fit(X_train, Y_train)
-    log_train_results_MLP(mlp, X_train, Y_train)
+    logging.info("\n_________________________"
+                 "\nInput DataSet Stats:"
+                 f"\n{data_set.describe()}")
+
+    # X = data_set.loc[:,("dx_psa", "pros_gleason", "numbiopp", "age", "bmi_curr", "cig_years", "rectal_history")]
+    X = data_set.iloc[:, :-1]
+    # X["pros_fh_age"].fillna(X["pros_fh_age"].mean(), inplace=True)
+    Y = data_set.iloc[:, -1]
+
+    validation_size = 0.1
+    X_train, X_test, Y_train, Y_test = model_selection.train_test_split(X, Y, test_size=validation_size,
+                                                                        random_state=11)
+
+    mlp = MLPRegressor(activation='identity', solver='adam', hidden_layer_sizes=(100, 100), verbose=False,
+                       random_state=11,
+                       max_iter=500,
+                       alpha=0.001)
+
+    rs = GridSearchCV(mlp, param_grid={
+        'solver': ['adam'],
+        'alpha': [0.001],
+        'hidden_layer_sizes': [(100, 100)],
+        'activation': ["identity"]}, verbose=10, cv=7)
+
+    rs.fit(X_train, Y_train)
+
+    log_train_results_MLPRegressor(rs.best_estimator_, X_test, Y_test)
+
+    # log_train_results_MLP(mlp, X_train, Y_train)
 
 
 if __name__ == "__main__":

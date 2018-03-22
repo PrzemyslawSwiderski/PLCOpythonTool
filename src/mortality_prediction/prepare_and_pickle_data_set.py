@@ -1,7 +1,7 @@
 import argparse
 
-from data_set_pickler import DataSetPickler
-from mortality_data_preprocessor import MortalityDataPreprocessor
+from classes.data_set_pickler import DataSetPickler
+from mortality_prediction.mortality_data_preprocessor import MortalityDataPreprocessor
 
 
 def main():

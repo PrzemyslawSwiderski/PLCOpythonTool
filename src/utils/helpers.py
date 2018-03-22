@@ -4,6 +4,8 @@ import os
 
 import numpy
 import pandas
+from sklearn.metrics import mean_squared_error
+from sklearn.model_selection import GridSearchCV
 
 
 def pretty_print_dict(dictionary):
@@ -47,15 +49,17 @@ def log_train_results_CV(rs, X_validation, Y_validation):
     logging.info(pandas.DataFrame({'predicted': mlp_output_values_scaled, 'real': Y_validation}))
 
 
-def log_train_results_MLP(rs, X_validation, Y_validation):
+def log_train_results_MLPRegressor(rs, X_validation, Y_validation):
     logging.info("Real / Predicted values:")
-    mlp_output_values_scaled = rs.predict(X_validation)
+    mlp_predicted_values = rs.predict(X_validation)
     logging.info(
-        pandas.DataFrame({'predicted': mlp_output_values_scaled, 'real': Y_validation}))
+        pandas.DataFrame({'predicted': mlp_predicted_values, 'real': Y_validation}))
+    logging.info(f"Estimator:\n{rs}")
+    logging.info(f"Number of iterations: {rs.n_iter_}")
     logging.info("Score:")
     logging.info(rs.score(X_validation, Y_validation))
-    logging.info("Loss:")
-    logging.info(rs.loss_)
+    logging.info("Mean squared error:")
+    logging.info(mean_squared_error(mlp_predicted_values, Y_validation))
 
 
 def get_redundant_pairs(data_frame):

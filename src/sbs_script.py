@@ -107,5 +107,4 @@ print('\nPerformance using the top 5 features:\n')
 print('Training accuracy:', knn.score(X_train_std[:, k5], y_train))
 print('Test accuracy:', knn.score(X_test_std[:, k5], y_test))
 
-# plt.plot(knn., marker='o')
 plt.show()

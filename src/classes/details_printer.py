@@ -1,6 +1,6 @@
 import logging
 
-from helpers import get_top_abs_correlations, get_correlations_by_feature
+from utils.helpers import get_top_abs_correlations, get_correlations_by_feature
 
 
 class ConsoleDataSetDetailsPrinter:
@@ -27,10 +27,11 @@ class ConsoleDataSetDetailsPrinter:
                          "\nTop Absolute Correlations"
                          f"\n{get_top_abs_correlations(self.data_set, n)}")
 
-    def print_correlations_of_feature(self, feature_name):
-        self.logger.info("\n_________________________"
-                         f"\nFeature {feature_name} Correlations"
-                         f"\n{get_correlations_by_feature(self.data_set, feature_name)}")
+    def print_correlations_of_features(self, features):
+        for f in features:
+            self.logger.info("\n_________________________"
+                             f"\nFeature {f} Correlations"
+                             f"\n{get_correlations_by_feature(self.data_set, f)}")
 
     def print_all(self):
         self.print_data_set_stats()

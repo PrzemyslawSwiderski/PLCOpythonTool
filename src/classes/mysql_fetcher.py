@@ -3,7 +3,7 @@ import logging
 import pandas
 import pymysql
 
-from query_loader import QueryLoader
+from classes.query_loader import QueryLoader
 
 
 class MySqlFetcher:

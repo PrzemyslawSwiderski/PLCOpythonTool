@@ -8,16 +8,19 @@ SELECT
   height_f,
 --  dcf_unddeath,
 --  pros_fh_age,
---  rectal_history,
---  surg_age,
+  curative_hormp,
+  curative_othp,
+  curative_prostp,
+  curative_radp,
+  rectal_history,
+  confirmed_pros,
+  surg_age,
   cig_years,
---  numbiopp,
---  asppd,
---  ibuppd,
---  weight_f,
---  height_f,
+  numbiopp,
+  age,
+  asppd,
+  ibuppd
 --  bmi_curr,
-  age
 FROM
   prostate_screening.prostate_overall
 WHERE dx_psa > 0.0 AND
