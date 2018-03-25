@@ -25,8 +25,8 @@ class MySqlFetcher:
 
     def run_select_query(self, query, arguments=None):
         self.data_set = pandas.read_sql_query(query, self.__db_connection, params=arguments)
-        logging.info(f"\nFetched data from DB: ")
-        logging.info(f"\n{self.data_set}")
+        logging.info(f"\nFetched data from DB: "
+                     f"\n{self.data_set}")
         return self.data_set
 
     def run_select_query_from_file(self, file_name):

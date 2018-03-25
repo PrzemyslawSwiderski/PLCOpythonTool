@@ -48,20 +48,6 @@ def log_train_results_CV(rs, X_validation, Y_validation):
     mlp_output_values_scaled = rs.predict(X_validation)
     logging.info(pandas.DataFrame({'predicted': mlp_output_values_scaled, 'real': Y_validation}))
 
-
-def log_train_results_MLPRegressor(rs, X_validation, Y_validation):
-    logging.info("Real / Predicted values:")
-    mlp_predicted_values = rs.predict(X_validation)
-    logging.info(
-        pandas.DataFrame({'predicted': mlp_predicted_values, 'real': Y_validation}))
-    logging.info(f"Estimator:\n{rs}")
-    logging.info(f"Number of iterations: {rs.n_iter_}")
-    logging.info("Score:")
-    logging.info(rs.score(X_validation, Y_validation))
-    logging.info("Mean squared error:")
-    logging.info(mean_squared_error(mlp_predicted_values, Y_validation))
-
-
 def get_redundant_pairs(data_frame):
     pairs_to_drop = set()
     cols = data_frame.columns
