@@ -3,6 +3,7 @@
 
 import logging
 import logging.handlers
+from importlib import reload
 from logging.config import dictConfig
 
 logger = logging.getLogger(__name__)
@@ -25,6 +26,9 @@ def configure_logging(logfile_path):
     - Assign INFO and DEBUG level to logger file handler and console handler
 
     """
+    logging.shutdown()
+    reload(logging)
+
     dictConfig(DEFAULT_LOGGING)
 
     default_formatter = logging.Formatter(
@@ -42,6 +46,6 @@ def configure_logging(logfile_path):
     file_handler.setFormatter(default_formatter)
     console_handler.setFormatter(default_formatter)
 
-    logging.root.setLevel(logging.INFO)
+    logging.root.setLevel(logging.NOTSET)
     logging.root.addHandler(file_handler)
     logging.root.addHandler(console_handler)
