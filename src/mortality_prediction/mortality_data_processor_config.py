@@ -14,28 +14,29 @@ config = {
         "age",
         "dx_psa",
         "pros_gleason",
-        # "bmi_curc",
-        # "weight_f",
-        # "height_f",
-        # "rectal_history",
-        # "surg_age",
-        # "cig_years",
-        # "numbiopp",
-        # "curative_hormp",
-        # "curative_othp",
-        # "curative_prostp",
-        # "curative_radp",
-        # "asppd",
-        # "ibuppd",
+        "bmi_curc",
+        "weight_f",
+        "height_f",
+        "rectal_history",
+        "surg_age",
+        "cig_years",
+        "numbiopp",
+        "curative_hormp",
+        "curative_othp",
+        "curative_prostp",
+        "curative_radp",
+        "asppd",
+        "ibuppd",
         "dth_days"  # THE LAST PARAMETER IS AIMED TO BE PREDICTED
     ],
     "features_to_print_correlations": ["dth_days"],
     "validation_size": 0.1,
     "scaler": StandardScaler(),
-    "should_scale_Y": True,
+    "should_scale_Y": False,
     "random_state_split_value": 9
     # "scaler": MinMaxScaler()
     # "scaler": MaxAbsScaler()
     # "scaler": Normalizer()
     # "scaler": RobustScaler()
 }
+

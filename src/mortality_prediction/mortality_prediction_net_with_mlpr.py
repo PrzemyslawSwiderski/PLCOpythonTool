@@ -1,6 +1,7 @@
 import logging
 import os
 
+import numpy
 from pandas import DataFrame
 from sklearn.externals import joblib
 from sklearn.metrics import mean_squared_error
@@ -38,7 +39,8 @@ class MortalityPredictionWithMLPR:
         input_tab = DataFrame([input_tab])
         input_scaled = self.data_processor.scaler.transform(input_tab)
         predicted_value = self.mlp.predict(input_scaled[:, :-1])[0]
-        output = DataFrame([[0.0, 0.0, 0.0, predicted_value]])
+        output = DataFrame([numpy.zeros(input_tab.size)])
+        output.loc[0, input_tab.size - 1] = predicted_value
         output = self.data_processor.scaler.inverse_transform(output)
         predicted_value = output[0][-1]
         return predicted_value

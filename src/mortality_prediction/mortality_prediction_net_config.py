@@ -2,7 +2,25 @@ from sklearn.neural_network import MLPRegressor
 from mortality_prediction.mortality_data_processor_config import config
 
 config = {
-    "test_input_data": [56.0, 4.70, 9.0, 7670.086179],
+    "test_input_data": [
+        56.0,  # "age",
+        4.70,  # "dx_psa",
+        6.0,  # "pros_gleason",
+        4.0,  # "bmi_curc",
+        210.0,  # "weight_f",
+        69.0,  # "height_f",
+        0.0,  # "rectal_history",
+        3.565378,  # "surg_age",
+        41.0,  # "cig_years",
+        1.0,  # "numbiopp",
+        0.0,  # "curative_hormp",
+        1.0,  # "curative_othp",
+        0.0,  # "curative_prostp",
+        0.0,  # "curative_radp",
+        6.0,  # "asppd",
+        0.0,  # "ibuppd",
+        7670.086179,  # "dth_days"  # THE LAST PARAMETER IS AIMED TO BE PREDICTED
+    ],
     "neural_net_def": MLPRegressor(activation='identity',
                                    solver='adam',
                                    hidden_layer_sizes=(15, 15),
