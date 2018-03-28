@@ -1,5 +1,7 @@
 import os
 
+LOG_TO_FILE_ENABLED = False
+
 PROJECT_ABSOLUTE_PATH = os.path.abspath(os.path.join(os.path.dirname(os.path.dirname(__file__)), os.pardir))
 
 LOGGER_CONFIG_FILE = os.path.join(PROJECT_ABSOLUTE_PATH, "common_config", "logging.conf")

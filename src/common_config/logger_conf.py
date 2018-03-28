@@ -6,6 +6,8 @@ import logging.handlers
 from importlib import reload
 from logging.config import dictConfig
 
+from common_config.common_config import LOG_TO_FILE_ENABLED
+
 logger = logging.getLogger(__name__)
 
 DEFAULT_LOGGING = {
@@ -47,5 +49,5 @@ def configure_logging(logfile_path):
     console_handler.setFormatter(default_formatter)
 
     logging.root.setLevel(logging.NOTSET)
-    logging.root.addHandler(file_handler)
+    if LOG_TO_FILE_ENABLED: logging.root.addHandler(file_handler)
     logging.root.addHandler(console_handler)

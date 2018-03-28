@@ -12,16 +12,14 @@ class CommonDataProcessor:
     def __init__(self, config, input_data_set=DataFrame()):
         self.config = config
         self.data_set = input_data_set
-        if 'scaler' in config:
-            self.scaler = config['scaler']
 
     def process_data(self):
         self.data_set = refactor_data_set_to_numeric(self.data_set)
         self.optimize_values()
         self.filter_data_set()
         self.split_data_set()
-        if hasattr(self, "scaler"):
-            self.scale_data_set()
+        if 'scaler' in self.config: self.scale_data_set()
+        if 'PCA_transform' in self.config: self.invoke_PCA_transform()
         self.print_info()
 
     @abstractmethod
@@ -33,30 +31,8 @@ class CommonDataProcessor:
             self.data_set = exclude_boundary_values(self.data_set, value["feature_name"],
                                                     value["boundary_scale_value"])
 
-        self.data_set = self.data_set[self.config["features_to_preserve_after_preprocessing"]]
+        self.data_set.drop(self.config["features_to_exclude_after_preprocessing"], axis=1, inplace=True)
         self.filtered_data_set_ = self.data_set
-
-    def scale_data_with_Y(self):
-        self.train_dataset_scaled_ = self.scaler.fit_transform(self.train_dataset_)
-        self.test_dataset_scaled_ = self.scaler.transform(self.test_dataset_)
-        self.X_train_ = self.train_dataset_scaled_[:, :-1]
-        self.X_test_ = self.test_dataset_scaled_[:, :-1]
-        self.Y_train_ = self.train_dataset_scaled_[:, -1]
-        self.Y_test_ = self.test_dataset_scaled_[:, -1]
-
-    def scale_data_without_Y(self):
-        self.train_dataset_scaled_ = self.scaler.fit_transform(self.train_dataset_.values[:, :-1])
-        self.test_dataset_scaled_ = self.scaler.transform(self.test_dataset_.values[:, :-1])
-        self.X_train_ = self.train_dataset_scaled_
-        self.X_test_ = self.test_dataset_scaled_
-        self.Y_train_ = self.train_dataset_.values[:, -1]
-        self.Y_test_ = self.test_dataset_.values[:, -1]
-
-    def scale_data_set(self):
-        if self.config["should_scale_Y"]:
-            self.scale_data_with_Y()
-        else:
-            self.scale_data_without_Y()
 
     def print_info(self):
         logging.info(f"\nPrepared data_set to predict {self.config['prediction_name']}: ")
@@ -78,3 +54,24 @@ class CommonDataProcessor:
         self.train_dataset_.rename(columns={"e": self.Y_train_.name}, inplace=True)
         self.test_dataset_ = self.X_test_.assign(e=self.Y_test_.values)
         self.test_dataset_.rename(columns={"e": self.Y_test_.name}, inplace=True)
+
+    def invoke_PCA_transform(self):
+        self.pca_ = self.config["PCA_transform"]["PCA_object"]
+        self.X_train_ = self.pca_.fit_transform(self.X_train_)
+        self.X_test_ = self.pca_.transform(self.X_test_)
+        logging.info(f"\nX train after PCA transformation: "
+                     f"{self.X_train_}")
+
+    def scale_data_set(self):
+        self.scaler_ = self.config["scaler"]
+        self.scaler_.scale_data_set_in_data_processor(self)
+
+    def transform_input_tab(self, input_tab):
+        if 'scaler' in self.config: input_tab = self.scaler_.scaler_transform(input_tab)
+        if 'PCA_transform' in self.config: input_tab = self.pca_.transform(input_tab)
+        return input_tab
+
+    def inverse_transform_input_tab(self, input_tab):
+        if 'scaler' in self.config: input_tab = self.scaler_.scaler_inverse_transform(input_tab)
+        if 'PCA_transform' in self.config: input_tab = self.pca_.inverse_transform(input_tab)
+        return input_tab

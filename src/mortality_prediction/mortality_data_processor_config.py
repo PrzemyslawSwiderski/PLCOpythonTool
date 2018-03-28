@@ -1,4 +1,7 @@
+from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, MaxAbsScaler, Normalizer, RobustScaler
+from mortality_prediction.mortality_prediction_net_config import config
+from classes.data_processor_scaler import CommonDataProcessorScaler
 
 config = {
     "prediction_name": "Mortality",
@@ -10,33 +13,20 @@ config = {
         {"feature_name": "dth_days", "boundary_scale_value": 2.0},
         {"feature_name": "dx_psa", "boundary_scale_value": 2.0}
     ],
-    "features_to_preserve_after_preprocessing": [
-        "age",
-        "dx_psa",
-        "pros_gleason",
-        "bmi_curc",
-        "weight_f",
-        "height_f",
-        "rectal_history",
-        "surg_age",
-        "cig_years",
-        "numbiopp",
-        "curative_hormp",
-        "curative_othp",
-        "curative_prostp",
-        "curative_radp",
-        "asppd",
-        "ibuppd",
-        "dth_days"  # THE LAST PARAMETER IS AIMED TO BE PREDICTED
+    "features_to_exclude_after_preprocessing": [
+        "pros_exitage",
     ],
     "features_to_print_correlations": ["dth_days"],
     "validation_size": 0.1,
-    "scaler": StandardScaler(),
-    "should_scale_Y": False,
-    "random_state_split_value": 9
+    # "scaler": MinMaxScaler(),
+    "scaler": CommonDataProcessorScaler({"transformer": StandardScaler(),
+                                         "should_scale_Y": config["should_scale_Y"]}),
+    "random_state_split_value": 9,
     # "scaler": MinMaxScaler()
     # "scaler": MaxAbsScaler()
     # "scaler": Normalizer()
     # "scaler": RobustScaler()
+    # "PCA_transform": {
+    #     "PCA_object": PCA(n_components=13, svd_solver='arpack'),
+    # }
 }
-

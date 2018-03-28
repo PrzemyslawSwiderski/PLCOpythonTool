@@ -48,6 +48,7 @@ def log_train_results_CV(rs, X_validation, Y_validation):
     mlp_output_values_scaled = rs.predict(X_validation)
     logging.info(pandas.DataFrame({'predicted': mlp_output_values_scaled, 'real': Y_validation}))
 
+
 def get_redundant_pairs(data_frame):
     pairs_to_drop = set()
     cols = data_frame.columns
@@ -67,7 +68,7 @@ def get_top_abs_correlations(data_frame, n=5):
 def get_correlations_by_feature(data_frame, feature_name):
     feature_corr = data_frame.corr()[feature_name]
     feature_corr = feature_corr.drop(labels=feature_name)
-    feature_corr.reindex(feature_corr.abs().sort_values(ascending=False).values)
+    feature_corr = feature_corr.reindex(feature_corr.abs().sort_values(ascending=False).index)
     return feature_corr
 
 
