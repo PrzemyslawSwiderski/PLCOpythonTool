@@ -27,7 +27,8 @@ class MortalityDataProcessor(CommonDataProcessor):
 
     def optimize_values(self):
         self.fill_missing_dth_days()
-        if 'surg_age' in self.data_set: self.data_set['surg_age'].fillna(self.data_set['surg_age'].mean(), inplace=True)
+        if 'surg_age' in self.data_set:
+            self.data_set['surg_age'].fillna(self.data_set['surg_age'].mean(), inplace=True)
         self.data_set.fillna(0, inplace=True)
 
     def get_data_from_database(self):

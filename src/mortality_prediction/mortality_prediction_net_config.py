@@ -20,8 +20,8 @@ config = {
         0.0,  # "ibuppd",
         7670.086179,  # "dth_days"  # THE LAST PARAMETER IS AIMED TO BE PREDICTED
     ],
-    "neural_net_def": MLPRegressor(activation='identity',
-                                   solver='lbfgs',
+    "neural_net_def": MLPRegressor(activation='relu',
+                                   solver='adam',
                                    hidden_layer_sizes=(15, 15),
                                    verbose=False,
                                    random_state=9,
@@ -38,6 +38,5 @@ config = {
                                    momentum=0.09,
                                    max_iter=200,
                                    alpha=0.001),
-    "should_scale_Y": False,
     "saved_net_name": "saved_mortality_net.pkl"
 }

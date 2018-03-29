@@ -1,6 +1,7 @@
 import logging
 from abc import abstractmethod
 
+import numpy
 from pandas import DataFrame
 from sklearn import model_selection
 
@@ -18,8 +19,16 @@ class CommonDataProcessor:
         self.optimize_values()
         self.filter_data_set()
         self.split_data_set()
-        if 'scaler' in self.config: self.scale_data_set()
-        if 'PCA_transform' in self.config: self.invoke_PCA_transform()
+        if 'PCA_transform' in self.config:
+            self.invoke_PCA_transform()
+        if 'scaler' in self.config:
+            self.scale_data_set()
+
+        logging.info(f"\nData set after processing description: "
+                     "\nX_TRAIN:"
+                     f"\n{DataFrame(self.X_train_).describe()}"
+                     "\nY_TRAIN:"
+                     f"\n{DataFrame(self.Y_train_).describe()}")
         self.print_info()
 
     @abstractmethod
@@ -50,10 +59,6 @@ class CommonDataProcessor:
                                                             random_state=split_value,
                                                             test_size=self.config["validation_size"])
         self.X_train_, self.X_test_, self.Y_train_, self.Y_test_ = train_test_split
-        self.train_dataset_ = self.X_train_.assign(e=self.Y_train_.values)
-        self.train_dataset_.rename(columns={"e": self.Y_train_.name}, inplace=True)
-        self.test_dataset_ = self.X_test_.assign(e=self.Y_test_.values)
-        self.test_dataset_.rename(columns={"e": self.Y_test_.name}, inplace=True)
 
     def invoke_PCA_transform(self):
         self.pca_ = self.config["PCA_transform"]["PCA_object"]
@@ -67,11 +72,15 @@ class CommonDataProcessor:
         self.scaler_.scale_data_set_in_data_processor(self)
 
     def transform_input_tab(self, input_tab):
-        if 'scaler' in self.config: input_tab = self.scaler_.scaler_transform(input_tab)
-        if 'PCA_transform' in self.config: input_tab = self.pca_.transform(input_tab)
+        if 'PCA_transform' in self.config:
+            pca_tab = self.pca_.transform([input_tab[:-1]])[0].tolist()
+            pca_tab.append(input_tab[-1])
+            input_tab = pca_tab
+        if 'scaler' in self.config:
+            input_tab = self.scaler_.scaler_transform(input_tab)
         return input_tab
 
     def inverse_transform_input_tab(self, input_tab):
-        if 'scaler' in self.config: input_tab = self.scaler_.scaler_inverse_transform(input_tab)
-        if 'PCA_transform' in self.config: input_tab = self.pca_.inverse_transform(input_tab)
+        if 'scaler' in self.config:
+            input_tab = self.scaler_.scaler_inverse_transform(input_tab)
         return input_tab

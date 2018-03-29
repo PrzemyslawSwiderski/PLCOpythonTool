@@ -16,17 +16,24 @@ config = {
     "features_to_exclude_after_preprocessing": [
         "pros_exitage",
     ],
-    "features_to_print_correlations": ["dth_days"],
+    "features_to_print_correlations": ["dth_days", "pros_gleason", "curative_hormp", "curative_othp", "curative_prostp",
+                                       "curative_radp"],
     "validation_size": 0.1,
-    # "scaler": MinMaxScaler(),
-    "scaler": CommonDataProcessorScaler({"transformer": StandardScaler(),
-                                         "should_scale_Y": config["should_scale_Y"]}),
-    "random_state_split_value": 9,
+    # "scaler": CommonDataProcessorScaler({"transformer": MinMaxScaler(),
+    #                                      "should_scale_Y": config["should_scale_Y"]}),
+    "scaler": CommonDataProcessorScaler({
+        "scaler_X": StandardScaler(),
+        "scaler_Y": StandardScaler(),
+        "should_scale_X": True,
+        "should_scale_Y": True
+    }
+    ),
+    "random_state_split_value": 4,
     # "scaler": MinMaxScaler()
     # "scaler": MaxAbsScaler()
     # "scaler": Normalizer()
     # "scaler": RobustScaler()
-    # "PCA_transform": {
-    #     "PCA_object": PCA(n_components=13, svd_solver='arpack'),
-    # }
+    "PCA_transform": {
+        "PCA_object": PCA(n_components=4),
+    }
 }

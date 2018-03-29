@@ -6,6 +6,8 @@ import logging.handlers
 from importlib import reload
 from logging.config import dictConfig
 
+import pandas
+
 from common_config.common_config import LOG_TO_FILE_ENABLED
 
 logger = logging.getLogger(__name__)
@@ -32,6 +34,8 @@ def configure_logging(logfile_path):
     reload(logging)
 
     dictConfig(DEFAULT_LOGGING)
+
+    pandas.options.display.float_format = '{:.4f}'.format
 
     default_formatter = logging.Formatter(
         "[%(asctime)s] [%(levelname)s] [%(name)s] [%(funcName)s():%(lineno)s] "
