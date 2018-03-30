@@ -81,3 +81,21 @@ def refactor_data_set_to_numeric(data_set):
     data_set = data_set.apply(pandas.to_numeric, errors="coerce")
     data_set.dropna(axis=1, how="all", inplace=True)
     return data_set
+
+
+def transform_data_frame(scaler, data_frame):
+    return pandas.DataFrame(scaler.transform(data_frame), columns=data_frame.columns)
+
+
+def inverse_transform_data_frame(scaler, data_frame):
+    return pandas.DataFrame(scaler.inverse_transform(data_frame), columns=data_frame.columns)
+
+
+def fit_transform_data_frame(scaler, data_frame):
+    return pandas.DataFrame(scaler.fit_transform(data_frame), columns=data_frame.columns)
+
+
+def exclude_data_frame_columns(data_frame, columns_to_drop):
+    out_put_data_frame = data_frame.copy()
+    out_put_data_frame.drop(columns_to_drop, axis="columns", inplace=True)
+    return out_put_data_frame

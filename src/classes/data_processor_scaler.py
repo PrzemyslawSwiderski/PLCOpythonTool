@@ -1,5 +1,7 @@
-import numpy
 from pandas import DataFrame
+
+from utils.helpers import fit_transform_data_frame, transform_data_frame, exclude_data_frame_columns, \
+    inverse_transform_data_frame
 
 
 class CommonDataProcessorScaler:
@@ -32,27 +34,31 @@ class CommonDataProcessorScaler:
             self.scale_X(data_processor)
         if self.config["should_scale_Y"]:
             self.scale_Y(data_processor)
+        pass
 
-    def scaler_transform(self, input_tab):
-        out_tab = numpy.array(input_tab)
+    def scaler_transform(self, input_tab, features_to_predict):
+        out_tab = DataFrame(input_tab)
         if self.config["should_scale_X"]:
-            out_tab[:-1] = self.scaler_X.transform([input_tab[:-1]])
+            out_tab = transform_data_frame(self.scaler_X, exclude_data_frame_columns(input_tab, features_to_predict))
         if self.config["should_scale_Y"]:
-            out_tab[-1] = self.scaler_Y.transform([[input_tab[-1]]])
-        return out_tab.tolist()
+            out_tab[self.config["features_to_predict"]] = transform_data_frame(self.scaler_Y, input_tab[
+                self.config["features_to_predict"]])
+        return out_tab
 
-    def scaler_inverse_transform(self, input_tab):
-        out_tab = numpy.array(input_tab)
+    def scaler_inverse_transform(self, input_tab, features_to_predict):
+        out_tab = DataFrame()
         if self.config["should_scale_X"]:
-            out_tab[:-1] = self.scaler_X.inverse_transform([input_tab[:-1]])
+            out_tab = inverse_transform_data_frame(self.scaler_X,
+                                                   exclude_data_frame_columns(input_tab, features_to_predict))
         if self.config["should_scale_Y"]:
-            out_tab[-1] = self.scaler_Y.inverse_transform([[input_tab[-1]]])
-        return out_tab.tolist()
+            out_tab[self.config["features_to_predict"]] = inverse_transform_data_frame(self.scaler_Y, input_tab[
+                self.config["features_to_predict"]])
+        return out_tab
 
     def scale_X(self, data_processor):
-        data_processor.X_train_ = self.scaler_X.fit_transform(data_processor.X_train_)
-        data_processor.X_test_ = self.scaler_X.transform(data_processor.X_test_)
+        data_processor.X_train_ = fit_transform_data_frame(self.scaler_X, data_processor.X_train_)
+        data_processor.X_test_ = transform_data_frame(self.scaler_X, data_processor.X_test_)
 
     def scale_Y(self, data_processor):
-        data_processor.Y_train_ = self.scaler_Y.fit_transform(data_processor.Y_train_[:, None])[:, 0]
-        data_processor.Y_test_ = self.scaler_Y.transform(data_processor.Y_test_[:, None])[:, 0]
+        data_processor.Y_train_ = fit_transform_data_frame(self.scaler_Y, data_processor.Y_train_)
+        data_processor.Y_test_ = transform_data_frame(self.scaler_Y, data_processor.Y_test_)

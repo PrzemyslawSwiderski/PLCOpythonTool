@@ -15,10 +15,8 @@ SELECT
   curative_prostp,
   curative_radp,
   asppd,
-  ibuppd,
-  dth_days
+  ibuppd
 FROM
   prostate_screening.prostate_overall
 WHERE dx_psa > 0.0 AND
       (pros_gleason NOT IN (0.0, 99.0))
---      AND dth_days!=''

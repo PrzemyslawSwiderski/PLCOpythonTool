@@ -1,7 +1,6 @@
 import logging
 import os
 
-import numpy
 from pandas import DataFrame
 from sklearn.externals import joblib
 from sklearn.metrics import mean_squared_error
@@ -9,6 +8,7 @@ from sklearn.metrics import mean_squared_error
 from common_config.common_config import PICKLES_PATH
 from mortality_prediction.mortality_data_processor import MortalityDataProcessor
 from mortality_prediction.mortality_prediction_net_config import config
+from utils.logging_helper import log_train_results_of_MLP, log_predict_result
 
 
 class MortalityPredictionWithMLPR:
@@ -27,7 +27,7 @@ class MortalityPredictionWithMLPR:
         self.mlp.fit(self.data_processor.X_train_, self.data_processor.Y_train_)
         if self.mlp.solver != "lbfgs":
             self.mlp.partial_fit(self.data_processor.X_test_, self.data_processor.Y_test_)
-        self.log_train_results_MLPRegressor(self.data_processor.X_test_, self.data_processor.Y_test_)
+        log_train_results_of_MLP(self.mlp, self.data_processor.X_test_, self.data_processor.Y_test_)
 
     def train_net_and_save(self):
         self.train_network()
@@ -38,26 +38,7 @@ class MortalityPredictionWithMLPR:
         predicted_value = self.mlp.predict([input_scaled[:-1]])
         input_scaled[-1] = predicted_value[0]
         output_tab = self.data_processor.inverse_transform_input_tab(input_scaled)
-        self.log_predict_result(input_tab, output_tab[-1])
+        log_predict_result(input_tab["dth_days"][0], output_tab[-1])
 
     def predict_by_test_data_from_config(self):
         self.predict_by_input(config["test_input_data"])
-
-    def log_predict_result(self, input_tab, predicted):
-        target = input_tab[-1]
-        abs_diff = abs(target - predicted)
-        logging.info(f"Input parameters: {input_tab[:-1]}")
-        logging.info(f"Predicted value of dth_days: {predicted}")
-        logging.info(f"Target value of dth_days: {target}")
-        logging.info(f"Predicted value and target abs diff: {abs_diff}")
-
-    def log_train_results_MLPRegressor(self, X_validation, Y_validation):
-        logging.info("Real / Predicted values:")
-        mlp_predicted_values = self.mlp.predict(X_validation)
-        logging.info(DataFrame({'predicted': mlp_predicted_values, 'real': Y_validation}))
-        logging.info(f"Estimator:\n{self.mlp}")
-        logging.info(f"Number of iterations: {self.mlp.n_iter_}")
-        logging.info("Score:")
-        logging.info(self.mlp.score(X_validation, Y_validation))
-        logging.info("Mean squared error:")
-        logging.info(mean_squared_error(mlp_predicted_values, Y_validation))
