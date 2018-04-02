@@ -2,6 +2,7 @@ import logging
 from abc import abstractmethod
 
 import numpy
+import pandas
 from pandas import DataFrame
 from sklearn import model_selection
 
@@ -21,7 +22,6 @@ class CommonDataProcessor:
         self.split_data_set()
         if 'PCA_transform' in self.config:
             self.invoke_PCA_transform()
-
         self.scale_data_set()
 
         logging.info(f"\nData set after processing description: "
@@ -62,8 +62,8 @@ class CommonDataProcessor:
 
     def invoke_PCA_transform(self):
         self.pca_ = self.config["PCA_transform"]["PCA_object"]
-        self.X_train_ = self.pca_.fit_transform(self.X_train_)
-        self.X_test_ = self.pca_.transform(self.X_test_)
+        self.X_train_ = pandas.DataFrame(self.pca_.fit_transform(self.X_train_))
+        self.X_test_ = pandas.DataFrame(self.pca_.transform(self.X_test_))
         logging.info(f"\nX train after PCA transformation: "
                      f"{self.X_train_}")
 

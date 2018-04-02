@@ -5,7 +5,8 @@ from sklearn.externals import joblib
 
 from common_config.common_config import LOGS_CATALOG_PATH, PICKLES_PATH
 from common_config.logger_conf import configure_logging
-from mortality_prediction.mortality_prediction_net_with_mlpr import MortalityPredictionWithMLPR
+from mortality_prediction.mortality_prediction_net_config import config
+from mortality_prediction.mortality_prediction_net_with_mlpr import PredictionWithMLPR
 
 
 def main():
@@ -15,7 +16,7 @@ def main():
     pickled_data_file = parser.parse_args().p
 
     data_processor = joblib.load(os.path.join(PICKLES_PATH, pickled_data_file))
-    predictor = MortalityPredictionWithMLPR(data_processor)
+    predictor = PredictionWithMLPR(config, data_processor)
     predictor.train_network()
     predictor.predict_by_test_data_from_config()
 

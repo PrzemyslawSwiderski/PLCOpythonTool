@@ -13,20 +13,20 @@ def log_predict_result(target, predicted):
 
 
 def log_train_results_of_MLP(mlp, X_validation, Y_validation):
-    logging.info("\nReal / Predicted values:\n")
     mlp_predicted_values = mlp.predict(X_validation)
-    results = DataFrame()
-    results["predicted"] = mlp_predicted_values
-    results["target"] = Y_validation.values
-    logging.info(results)
+    fmt = '{} {}'
+    logging.info(fmt.format('Real', 'Predicted'))
+    for i, (real, predicted) in enumerate(zip(Y_validation.values, mlp_predicted_values)):
+        logging.info(fmt.format(real,predicted))
+        if i > 100: break
     logging.info(f"\nEstimator:\n{mlp}")
     logging.info(f"\nNumber of iterations: {mlp.n_iter_}")
 
     if type(mlp) is MLPRegressor:
-        score = mlp.score(X_validation, results.target.values)
+        score = mlp.score(X_validation, Y_validation)
     else:
-        accuracy_score(results.target.values, results.predicted.values)
+        score = accuracy_score(Y_validation, mlp_predicted_values)
     logging.info("\nAccuracy Score:"
                  f"\n{score}")
     logging.info("\nMean squared error:"
-                 f"\n{mean_squared_error(results.target.values,results.predicted.values)}")
+                 f"\n{mean_squared_error(Y_validation,mlp_predicted_values)}")

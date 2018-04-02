@@ -6,19 +6,18 @@ config = {
     "prediction_name": "Treatment",
     "pickle_file_name": "predict_treatment.pkl",
     "query_file_name": "select_to_predict_treatment.sql",
-    "average_life_duration": 77.0,
-    "days_in_year": 365.242199,
     "boundary_values_to_exclude": [
+        {"feature_name": "dx_psa", "boundary_scale_value": 2.0}
     ],
     "features_to_exclude_after_preprocessing": [
         "pros_exitage",
         # "age",
     ],
     "features_to_predict": [
-        "curative_hormp",
+        # "curative_hormp",
         "curative_othp",
         "curative_prostp",
-        "curative_radp",
+        # "curative_radp",
     ],
     "features_to_print_correlations": ["curative_hormp", "curative_othp", "curative_prostp",
                                        "curative_radp"],
@@ -39,7 +38,7 @@ config = {
     # "scaler": MaxAbsScaler()
     # "scaler": Normalizer()
     # "scaler": RobustScaler()
-    "PCA_transform": {
-        "PCA_object": PCA(n_components=4),
-    }
+    # "PCA_transform": {
+    #     "PCA_object": PCA(n_components=7),
+    # }
 }

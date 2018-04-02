@@ -29,7 +29,7 @@ config = {
         "scaler_Y": StandardScaler(),
         "should_scale_X": True,
         # "should_scale_X": True,
-        "should_scale_Y": False,
+        "should_scale_Y": True,
         # "should_scale_Y": True
     }
     ),
