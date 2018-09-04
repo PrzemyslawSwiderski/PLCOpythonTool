@@ -19,7 +19,7 @@ class MLPPredictor:
     def load_net(self):
         self.mlp = joblib.load(os.path.join(PICKLES_PATH, self.config["saved_net_name"]))
 
-    def train_network(self):
+    def train_net(self):
         self.data_processor.process_data()
         self.mlp.fit(self.data_processor.X_train_, self.data_processor.Y_train_)
         if self.mlp.solver != "lbfgs":
@@ -27,7 +27,7 @@ class MLPPredictor:
         log_train_results_of_MLP(self.mlp, self.data_processor.X_test_, self.data_processor.Y_test_)
 
     def train_net_and_save(self):
-        self.train_network()
+        self.train_net()
         self.save_net()
 
     def predict_by_input(self, input_tab):

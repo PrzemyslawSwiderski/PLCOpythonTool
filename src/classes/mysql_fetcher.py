@@ -3,11 +3,11 @@ import logging
 import pandas
 import pymysql
 
-from classes.query_loader import QueryLoader
+from classes.file_query_loader import FileQueryLoader
 
 
 class MySqlFetcher:
-    def __init__(self, query_loader=QueryLoader()):
+    def __init__(self, query_loader=FileQueryLoader()):
         self.__db_connection = self.open_connection()
         self.data_set = pandas.DataFrame()
         self.query_loader = query_loader

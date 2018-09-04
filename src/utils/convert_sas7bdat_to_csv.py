@@ -3,7 +3,7 @@
 import os
 import sys
 
-import SAS7BDAT as SAS7BDAT
+from sas7bdat import SAS7BDAT
 
 
 def main(argv):

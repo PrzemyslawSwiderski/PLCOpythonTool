@@ -57,7 +57,7 @@ class CommonDataProcessor:
         train_test_split = model_selection.train_test_split(self.data_set[self.X_features_],
                                                             self.data_set[self.Y_features_],
                                                             random_state=split_value,
-                                                            test_size=self.config["validation_size"])
+                                                            test_size=self.config["test_size"])
         self.X_train_, self.X_test_, self.Y_train_, self.Y_test_ = train_test_split
 
     def invoke_PCA_transform(self):

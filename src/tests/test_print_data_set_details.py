@@ -3,7 +3,7 @@ import unittest
 
 from classes.details_printer import ConsoleDataSetDetailsPrinter
 from classes.mysql_fetcher import MySqlFetcher
-from common_config.config import QUERIES_PATH, LOGS_CATALOG_PATH
+from common_config.common_config import LOGS_CATALOG_PATH, QUERIES_PATH
 from common_config.logger_conf import configure_logging
 
 

@@ -14,14 +14,14 @@ config = {
         # "age",
     ],
     "features_to_predict": [
-        # "curative_hormp",
-        "curative_othp",
-        "curative_prostp",
-        # "curative_radp",
+        "curative_hormp",
+        # "curative_othp",
+        # "curative_prostp",
+        "curative_radp",
     ],
     "features_to_print_correlations": ["curative_hormp", "curative_othp", "curative_prostp",
                                        "curative_radp"],
-    "validation_size": 0.1,
+    "test_size": 0.1,
     # "scaler": CommonDataProcessorScaler({"transformer": MinMaxScaler(),
     #                                      "should_scale_Y": config["should_scale_Y"]}),
     "scaler": CommonDataProcessorScaler({
@@ -33,7 +33,7 @@ config = {
         "should_scale_Y": False
     }
     ),
-    "random_state_split_value": 4,
+    "random_state_split_value": 6,
     # "scaler": MinMaxScaler()
     # "scaler": MaxAbsScaler()
     # "scaler": Normalizer()

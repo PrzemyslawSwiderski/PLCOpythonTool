@@ -6,16 +6,12 @@ SELECT
   pros_exitage,
   weight_f,
   height_f,
-  rectal_history,
---  surg_age,
   cig_years,
   numbiopp,
   curative_hormp,
   curative_othp,
   curative_prostp,
-  curative_radp,
-  asppd,
-  ibuppd
+  curative_radp
 FROM
   prostate_screening.prostate_overall
 WHERE dx_psa > 0.0 AND

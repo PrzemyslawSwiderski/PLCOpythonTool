@@ -1,4 +1,7 @@
+from abc import abstractmethod
+
+
 class QueryLoader:
+    @abstractmethod
     def load_query(self, query_name):
-        with open(query_name, 'r') as query_file:
-            return query_file.read()
+        pass

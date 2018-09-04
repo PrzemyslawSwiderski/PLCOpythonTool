@@ -21,7 +21,7 @@ config = {
     ],
     "features_to_print_correlations": ["dth_days", "pros_gleason", "curative_hormp", "curative_othp", "curative_prostp",
                                        "curative_radp"],
-    "validation_size": 0.1,
+    "test_size": 0.1,
     # "scaler": CommonDataProcessorScaler({"transformer": MinMaxScaler(),
     #                                      "should_scale_Y": config["should_scale_Y"]}),
     "scaler": CommonDataProcessorScaler({
